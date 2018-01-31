@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Moq;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 
@@ -10,11 +12,19 @@ namespace ConwaysGameOfLife
     public class GameBoardRendererTests
     {
         private GameBoardRenderer _renderer;
+        private Mock<ICellGenerationStrategy> _mockCellGenerator;
+        private List<Cell> _cells;
+
 
         [SetUp]
         public void SetUp()
         {
             _renderer = new GameBoardRenderer();
+            _mockCellGenerator = new Mock<ICellGenerationStrategy>();
+
+            _cells = new List<Cell> { new Cell { IsAlive = true } };
+            _mockCellGenerator.Setup(x => x.GenerateCells(It.IsAny<int>())).Returns(_cells);
+
         }
 
         [Test]
@@ -50,6 +60,15 @@ namespace ConwaysGameOfLife
         }
 
         [Test]
+        public void Render_GivenAliveCell_OutputsHash()
+        {
+            var gameOfLifeBoard = new GameOfLifeBoard(1, 1, _mockCellGenerator.Object);
+
+            var output = _renderer.Render(gameOfLifeBoard);
+            Assert.That(output.First(), Is.EqualTo("#"));
+        }
+
+        [Test]
         public void Render_EmptyBoardReasonableSize_LooksFine()
         {
             var gameOfLifeBoard = new GameOfLifeBoard(20, 20);
@@ -57,7 +76,7 @@ namespace ConwaysGameOfLife
 
             foreach (var line in output)
             {
-                Debug.WriteLine(line);   
+                Console.WriteLine(line);   
             }
         }
     }

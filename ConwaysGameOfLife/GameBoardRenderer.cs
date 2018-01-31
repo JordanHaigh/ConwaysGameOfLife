@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace ConwaysGameOfLife
 {
@@ -16,9 +17,13 @@ namespace ConwaysGameOfLife
 
             foreach (var row in gameOfLifeBoard.Rows)
             {
-                int outputLength = row.Count;
-                var thisRow = string.Join("", Enumerable.Repeat("-", outputLength));
-                outputLine.Add(thisRow);
+                var buffer = new StringBuilder();
+                foreach (var cell in row)
+                {
+                    buffer.Append(cell.IsAlive ? "#" : "-");
+                }
+
+                outputLine.Add(buffer.ToString());
             }
 
             return outputLine;
