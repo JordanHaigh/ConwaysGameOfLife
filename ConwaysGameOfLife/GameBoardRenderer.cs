@@ -18,6 +18,7 @@ namespace ConwaysGameOfLife
             foreach (var row in gameOfLifeBoard.Rows)
             {
                 var buffer = new StringBuilder();
+                //Hashes for alive, Dashes for Dead
                 foreach (var cell in row)
                 {
                     buffer.Append(cell.IsAlive ? "#" : "-");

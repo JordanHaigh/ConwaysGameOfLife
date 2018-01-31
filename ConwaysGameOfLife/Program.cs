@@ -14,40 +14,29 @@ namespace ConwaysGameOfLife
     }
 }
 
+    /*
 
-/*
-32:19
-    
-    
-    Scenario 2:
+    Scenario 3:
 
-As a *player*
-When I start the program
-I can generate a random initial state
+    As a *living cell*
+    When the game ticks
+    I change state
 
-Accept:
-Half or less of the cells set to alive at random
-Living cells visible on the rendered gameboard
+    Accept:
+    If cell has < 2 living neighbours, cell dies
+    If cell has > 3 living neighbours, cell dies
+    If cell has 2-3 living neighbours, cell lives
+    Scenario 4:
 
-Scenario 3:
+    As a *dead or empty cell*
+    When the game ticks
+    I change state
 
-As a *living cell*
-When the game ticks
-I change state
+    Accept:
+    If cell has 3 living neighbours, cell lives
+     * 
+     * 
+    */
 
-Accept:
-If cell has < 2 living neighbours, cell dies
-If cell has > 3 living neighbours, cell dies
-If cell has 2-3 living neighbours, cell lives
-Scenario 4:
 
-As a *dead or empty cell*
-When the game ticks
-I change state
-
-Accept:
-If cell has 3 living neighbours, cell lives
- * 
- * 
-*/
 

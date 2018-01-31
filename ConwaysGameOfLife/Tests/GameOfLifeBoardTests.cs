@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 
@@ -39,15 +40,15 @@ namespace ConwaysGameOfLife
             var board = new GameOfLifeBoard(30,30);
 
             Assert.That(board.Rows, Is.Not.Null);
-            Assert.That(board.Rows.Count, Is.EqualTo(30));
-            Assert.That(board.Rows[0].Count, Is.EqualTo(30));
+            Assert.That(board.Rows.Count(), Is.EqualTo(30));
+            Assert.That(board.Rows.First().Count, Is.EqualTo(30));
         }
 
         [Test]
         public void Ctor_GivenDimensions_CellsPopulated()
         {
             var board = new GameOfLifeBoard(1,1);
-            Assert.That(board.Rows[0][0], Is.TypeOf<Cell>());
+            Assert.That(board.Rows.First()[0], Is.TypeOf<Cell>());
 
         }
 
@@ -59,7 +60,72 @@ namespace ConwaysGameOfLife
             mockStrategy.Setup(x => x.GenerateCells(It.IsAny<int>())).Returns(new List<Cell> {expectedCell});
 
             var board = new GameOfLifeBoard(1, 1, mockStrategy.Object);
-            Assert.That(board.Rows[0][0], Is.EqualTo(expectedCell));
+            Assert.That(board.Rows.First()[0], Is.EqualTo(expectedCell));
+            Assert.That(board.Rows.First()[0].X, Is.EqualTo(0));
+            Assert.That(board.Rows.First()[0].Y, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void Step_GivenOneLivingCell_Dies()
+        {
+            var board = new GameOfLifeBoard(1,1,
+                new StaticListStrategy(new List<Cell>
+                {
+                    new Cell{IsAlive = true}
+                }));
+
+            board.Step();
+
+            Assert.That(board.Rows.First()[0].IsAlive, Is.False);
+        }
+
+        [Test]
+        public void Step_GiveFourLivingNeighbours_Dies()
+        {
+            /*
+                 If cell has > 3 living neighbours, cell dies
+                 If cell has 2-3 living neighbours, cell lives
+             */
+            var board = new GameOfLifeBoard(3, 3,
+                new StaticListStrategy(new List<Cell>
+                {
+                    new Cell{IsAlive = true},
+                    new Cell{IsAlive = true},
+                    new Cell{IsAlive = true},
+
+                    new Cell{IsAlive = true},
+                    new Cell{IsAlive = true}, //This one should die if all alive
+                    new Cell{IsAlive = true},
+
+                    new Cell{IsAlive = true},
+                    new Cell{IsAlive = true},
+                    new Cell{IsAlive = true}
+
+                }));
+
+            board.Step();
+
+            Assert.That(board.Rows.Skip(1).First()[1].IsAlive, Is.False);
+        }
+
+        [Test]
+        public void Step_GiveTwoLivingNeighbours_Lives()
+        {
+            /*
+                 If cell has < 2 living neighbours, cell dies
+                 If cell has 2-3 living neighbours, cell lives
+             */
+            var board = new GameOfLifeBoard(3, 1,
+                new StaticListStrategy(new List<Cell>
+                {
+                    new Cell{IsAlive = true}, //Should die
+                    new Cell{IsAlive = true}, //He should live
+                    new Cell{IsAlive = true} //Should die
+                }));
+
+            board.Step();
+
+            Assert.That(board.Rows.First()[1].IsAlive, Is.True);
         }
 
     }
