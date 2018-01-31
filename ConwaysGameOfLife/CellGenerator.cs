@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ConwaysGameOfLife
@@ -18,7 +19,7 @@ namespace ConwaysGameOfLife
                 list.Add(new Cell());
             }
 
-            return list;
+            return list.OrderBy(x=>Guid.NewGuid()).ToList();
         }
 
     }

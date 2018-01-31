@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Runtime.InteropServices;
 using NUnit.Framework;
 
 namespace ConwaysGameOfLife
@@ -6,6 +7,15 @@ namespace ConwaysGameOfLife
     [TestFixture]
     public class CellGeneratorTests
     {
+        private CellGenerator _generator;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _generator = new CellGenerator();
+        }
+
+
         [Test]
         public void GenerateCells_AskForTwoCells_OneAliveOneDead()
         {
@@ -25,5 +35,16 @@ namespace ConwaysGameOfLife
             Assert.That(cells.Count(x => !x.IsAlive), Is.EqualTo(2));
 
         }
+
+        /*[Test]
+        public void GenerateCells_AskForTenCells_OrderShouldntMatch()
+        {
+            var cells1 = _generator.GenerateCells(10);
+            var cells2 = _generator.GenerateCells(10);
+
+            //TODO come back - make this pass
+
+
+        }*/
     }
 }
