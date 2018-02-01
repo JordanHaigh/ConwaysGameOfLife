@@ -14,24 +14,6 @@ namespace ConwaysGameOfLife
 
         public Cell[,] Board { get; set; }
 
-        /*public IEnumerable<List<Cell>> Rows
-        {
-            get
-            {
-                for (int y = 0; y < Height; y++)
-                {
-                    var row = new List<Cell>();
-                    for (int x = 0; x < Width; x++)
-                    {
-                        var thisCell = Board[x, y];
-                        row.Add(thisCell);
-                    }
-
-                    yield return row;
-                }
-            }
-        }*/
-
         public GameOfLifeBoard(int width, int height, ICellGenerationStrategy generator = null)
         {
             //Ability to specify a Cell Generation strategy or not
@@ -39,10 +21,10 @@ namespace ConwaysGameOfLife
             Width = width;
             Height = height;
 
-            GenerateState();
+            GenerateInitialState();
         }
 
-        private void GenerateState()
+        private void GenerateInitialState()
         {
             var bagOfCells = new Stack<Cell>(_generator.GenerateCells(Width * Height));
 
@@ -68,7 +50,7 @@ namespace ConwaysGameOfLife
                 for (var x = 0; x < Width; x++)
                 {
                     var existingCell = Board[x, y];
-                    var newCellState = DetermineCellState(existingCell, x, y);
+                    var newCellState = CalculateNextState(existingCell, x, y);
                     targetState[x, y] = newCellState;
                 }
             }
@@ -77,7 +59,7 @@ namespace ConwaysGameOfLife
 
         }
 
-        private Cell DetermineCellState(Cell cell, int x, int y)
+        private Cell CalculateNextState(Cell cell, int x, int y)
         {
             var neighbours = GetNeighbours(x, y);
             var livingNeighbours = neighbours.Count(c => c.IsAlive);
@@ -93,11 +75,9 @@ namespace ConwaysGameOfLife
             }
             else
             {
-                if(livingNeighbours == 3)
-                    return new Cell { IsAlive = true }; //Cell Lives
-                else
-                    return new Cell { IsAlive = false };
-
+                return livingNeighbours == 3 
+                    ? new Cell { IsAlive = true } 
+                    : new Cell { IsAlive = false };
             }
 
 
