@@ -80,14 +80,28 @@ namespace ConwaysGameOfLife
         private Cell DetermineCellState(Cell cell, int x, int y)
         {
             var neighbours = GetNeighbours(x, y);
+            var livingNeighbours = neighbours.Count(c => c.IsAlive);
 
-            if (neighbours.Count(c => c.IsAlive) == 2
-                || neighbours.Count(c => c.IsAlive) == 3)
+            if (cell.IsAlive)
             {
-                return new Cell { IsAlive = true}; //Cell Lives
+                if (livingNeighbours < 2 || livingNeighbours > 3)
+                    return new Cell { IsAlive = false };
+
+                if (livingNeighbours == 2 || livingNeighbours == 3)
+                    return new Cell { IsAlive = true }; //Cell Lives
+
+            }
+            else
+            {
+                if(livingNeighbours == 3)
+                    return new Cell { IsAlive = true }; //Cell Lives
+                else
+                    return new Cell { IsAlive = false };
+
             }
 
-            return new Cell {IsAlive = false};
+
+            throw new InvalidOperationException();
 
         }
 
@@ -109,11 +123,11 @@ namespace ConwaysGameOfLife
 
 
             var neighbours = new List<Cell>();
-            foreach (var getThis in coords)
+            foreach (var pair in coords)
             {
                 try
                 {
-                    var neighbourCell = Board[getThis.X, getThis.Y];
+                    var neighbourCell = Board[pair.X, pair.Y];
                     neighbours.Add(neighbourCell);
                 }
                 catch 
