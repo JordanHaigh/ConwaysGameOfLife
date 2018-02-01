@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Internal;
 
@@ -10,6 +12,27 @@ namespace ConwaysGameOfLife
     {
         static void Main(string[] args)
         {
+            var board = new GameOfLifeBoard(50, 50);
+            var renderer = new GameBoardRenderer();
+
+            for (int i = 0; i < 100; i++)
+            {
+                var output = renderer.Render(board);
+
+                Console.Clear();
+
+                foreach (var line in output)
+                {
+                    Console.WriteLine(line);
+                }
+
+                Thread.Sleep(500);
+                board.Step();
+
+            }
+
+
+
         }
     }
 }

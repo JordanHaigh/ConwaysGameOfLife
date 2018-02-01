@@ -15,16 +15,17 @@ namespace ConwaysGameOfLife
 
             var outputLine =  new List<string>();
 
-            foreach (var row in gameOfLifeBoard.Rows)
+            for (var y = 0; y < gameOfLifeBoard.Height; y++)
             {
                 var buffer = new StringBuilder();
-                //Hashes for alive, Dashes for Dead
-                foreach (var cell in row)
+                for (var x = 0; x < gameOfLifeBoard.Width; x++)
                 {
+                    var cell = gameOfLifeBoard.Board[x, y];
+                    //Hashes for alive, Dashes for Dead
                     buffer.Append(cell.IsAlive ? "#" : "-");
                 }
-
                 outputLine.Add(buffer.ToString());
+
             }
 
             return outputLine;
